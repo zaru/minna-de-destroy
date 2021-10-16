@@ -1,10 +1,33 @@
 use warp::Filter;
 use rand::Rng;
+use std::env;
 
 static mut HIT_POINT: i32 = 30;
 
+
 #[tokio::main]
 async fn main() {
+    let port_key = "PORT";
+    let default_port = 3000;
+    let port = match env::var(port_key) {
+        Ok(val) => match val.parse::<u16>() {
+            Ok(port) => port,
+            Err(_) => {
+                println!(
+                    "the port number \"{}\" is invalid. default port will be used.",
+                    val
+                );
+                default_port
+            }
+        },
+        Err(_) => {
+            println!(
+                "\"{}\" is not defined in environment variables. default port will be used.",
+                port_key
+            );
+            default_port
+        }
+    };
 
     // GET /
     let root = warp::path::end().map(|| unsafe{ root() });
@@ -18,7 +41,7 @@ async fn main() {
     );
 
     warp::serve(routes)
-        .run(([127, 0, 0, 1], 10000))
+        .run(([127, 0, 0, 1], port))
         .await;
 }
 
