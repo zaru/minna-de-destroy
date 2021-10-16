@@ -8,7 +8,7 @@ static mut HIT_POINT: i32 = 30;
 #[tokio::main]
 async fn main() {
     let port_key = "PORT";
-    let default_port = 3000;
+    let default_port = 8088;
     let port = match env::var(port_key) {
         Ok(val) => match val.parse::<u16>() {
             Ok(port) => port,
@@ -41,7 +41,7 @@ async fn main() {
     );
 
     warp::serve(routes)
-        .run(([127, 0, 0, 1], port))
+        .run(([0, 0, 0, 0], port))
         .await;
 }
 
