@@ -45,7 +45,7 @@ async fn main() {
 }
 
 unsafe fn root() -> String {
-    return format!("HitPoint: {}", HIT_POINT);
+    return format!("たたかう？ /kougeki/:name");
 }
 
 unsafe fn kougeki(name: String) -> String {
