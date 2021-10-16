@@ -29,15 +29,14 @@ async fn main() {
         }
     };
 
-    // GET /
     let root = warp::path::end().map(|| unsafe{ root() });
-
-    // GET /hi
-    let hi = warp::path!("attack" / String).map(|name| unsafe{ attack(name) });
+    let kougeki = warp::path!("kougeki" / String).map(|name| unsafe{ kougeki(name) });
+    let zaoriku = warp::path("zaoriku").map(|| unsafe{ zaoriku() });
 
     let routes = warp::get().and(
         root
-            .or(hi)
+            .or(kougeki)
+            .or(zaoriku)
     );
 
     warp::serve(routes)
@@ -49,7 +48,10 @@ unsafe fn root() -> String {
     return format!("HitPoint: {}", HIT_POINT);
 }
 
-unsafe fn attack(name: String) -> String {
+unsafe fn kougeki(name: String) -> String {
+    if HIT_POINT < 1 {
+        return format!("へんじがない。ただの　しかばね　のようだ\nふっかつのじゅもん\n/zaoriku");
+    }
     let critical = rand::thread_rng().gen_range(0..3);
     let power = if critical == 2 {
         rand::thread_rng().gen_range(15..20)
@@ -68,4 +70,13 @@ unsafe fn attack(name: String) -> String {
         format!("{}のこうげき！\n{}なにかよくわからないやつに {} のダメージ！", name, critical_message, power)
     };
     return message;
+}
+
+unsafe fn zaoriku() -> String {
+    if HIT_POINT < 1 {
+        HIT_POINT = 30;
+        return format!("ザオリクを　となえた！\nなにかよくわからないやつは　いきかえった！");
+    } else {
+        return format!("ザオリクを　となえた！\nなにかよくわからないやつは　きかなかった！");
+    }
 }
