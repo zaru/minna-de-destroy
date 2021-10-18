@@ -40,7 +40,7 @@ async fn main() {
     );
 
     warp::serve(routes)
-        .run(([0, 0, 0, 0], default_port))
+        .run(([0, 0, 0, 0], port))
         .await;
 }
 
